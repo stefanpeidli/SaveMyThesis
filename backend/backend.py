@@ -5,7 +5,7 @@ from flair.embeddings import WordEmbeddings, DocumentPoolEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def is_different_large(text1, text2):
+def is_difference_large(text1, text2):
     text1_preproccessed = Sentence(text1)
     text2_preproccessed = Sentence(text2)
 
@@ -23,15 +23,25 @@ def is_different_large(text1, text2):
 
 
 def which_paragraph_changed(text):
-    re.
-    pass
+    list_of_paragraphs = re.findall(r"[^#]+", text)
+    has_changes = [_check_if_has_diff(paragraph) for paragraph in list_of_paragraphs]
+    print(has_changes)
+
+
+def _check_if_has_diff(text):
+    diff_tokens = ["<ins>", "<del>"]
+    return any(diff_token in text for diff_token in diff_tokens)
 
 
 if __name__ == "__main__":
-    with open('text1.txt', 'r') as f:
-        text1_ = f.read()
-    with open('text3.txt', 'r') as f:
-        text2_ = f.read()
-    is_different_large(text1_, text2_)
+    # with open('text1.txt', 'r') as f:
+    #     text1_ = f.read()
+    # with open('text3.txt', 'r') as f:
+    #     text2_ = f.read()
+    # is_difference_large(text1_, text2_)
+
+    with open('example.md', 'r') as f:
+        example_md = f.read()
+    which_paragraph_changed(example_md)
 
 
