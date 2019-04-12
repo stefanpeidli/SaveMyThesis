@@ -6,6 +6,28 @@ import Editor from './components/Editor';
 import Preview from './components/Preview';
 import History from './components/History';
 
+
+const mockHistory = [
+  {
+    id: 0,
+    commitTitle: 'Add paragraph about dogs',
+    timestamp: 1555083960769,
+    author: 'Dong-Ha Kim'
+  },
+  {
+    id: 1,
+    commitTitle: 'Change paragraph about cats',
+    timestamp: 1555083960769,
+    author: 'Dong-Ha Kim'
+  },
+  {
+    id: 2,
+    commitTitle: 'Remove errors',
+    timestamp: 1555083960769,
+    author: 'Dong-Ha Kim'
+  }
+]
+
 class App extends Component {
   state = {
     text: ''
@@ -25,7 +47,7 @@ class App extends Component {
             onChangeText={this.handleEditorTextChange}
           />
           <Preview rawText={this.state.text} />
-          <History />
+          <History history={mockHistory}  />
         </Box>
       </Box>
     );

@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Text } from 'grommet';
 
-const History = () => {
+import HistoryItem from './HistoryItem';
+
+const History = ({ history }) => {
   return (
     <Box
       pad='medium'
@@ -13,9 +15,19 @@ const History = () => {
         pad='medium'
         elevation='medium'
       >
-        <Text color='brand'>
+        <Text color='brand' weight='bold'>
           History
         </Text>
+        <Box pad={{ vertical: 'small' }}>
+          {history.map(({ id, commitTitle, timestamp, author }) => (
+            <HistoryItem
+              key={id}
+              commitTitle={commitTitle}
+              timestamp={timestamp}
+              author={author}
+            />
+          ))}
+        </Box>
       </Box>
     </Box>
   );
