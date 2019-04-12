@@ -8,11 +8,15 @@ const ICON_MAP = {
   'remove': <Trash />,
 }
 
-const HistoryItem = ({ commitTitle, timestamp, author }) => {
+const HistoryItem = ({ commitTitle, timestamp, author, onClick }) => {
   const commitPredicate = commitTitle.split(' ')[0].toLowerCase()
 
   return (
-    <Box direction='row'>
+    <Box
+      className='pointer'
+      direction='row'
+      onClick={() => onClick()}
+    >
       <Box
         fill='vertical'
         border={{

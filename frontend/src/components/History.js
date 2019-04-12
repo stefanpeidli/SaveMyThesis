@@ -3,7 +3,7 @@ import { Box, Text } from 'grommet';
 
 import HistoryItem from './HistoryItem';
 
-const History = ({ history }) => {
+const History = ({ history, onClickItem }) => {
   return (
     <Box
       pad='medium'
@@ -19,12 +19,19 @@ const History = ({ history }) => {
           History
         </Text>
         <Box pad={{ vertical: 'small' }}>
+          <HistoryItem
+            commitTitle='Current version'
+            timestamp={new Date().getTime()}
+            author={'You'}
+            onClick={() => onClickItem(null)}
+          />
           {history.map(({ id, commitTitle, timestamp, author }) => (
             <HistoryItem
               key={id}
               commitTitle={commitTitle}
               timestamp={timestamp}
               author={author}
+              onClick={() => onClickItem(id)}
             />
           ))}
         </Box>
