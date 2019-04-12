@@ -1,5 +1,6 @@
 import numpy as np
 import re
+import nltk
 from flair.data import Sentence
 from flair.embeddings import WordEmbeddings, DocumentPoolEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
@@ -31,6 +32,23 @@ def which_paragraph_changed(text):
 def _check_if_has_diff(text):
     diff_tokens = ["<ins>", "<del>"]
     return any(diff_token in text for diff_token in diff_tokens)
+
+
+def count_changes(difference):
+    # Takes difference from wdiffhtml as input
+    # Returns total number of changes in words
+    dif = difference.splitlines()
+    num_changes = 0
+    for line in dif:
+        if '<ins>' in line:
+            word_list = nltk.word_tokenize(
+                line[re.search('<ins>', line).end():re.search('</ins>', line).start()])
+            num_changes += len(word_list)
+        if '<del>' in line:
+            word_list = nltk.word_tokenize(
+                line[re.search('<del>', line).end():re.search('</del>', line).start()])
+            num_changes += len(word_list)
+    return num_changes
 
 
 if __name__ == "__main__":
