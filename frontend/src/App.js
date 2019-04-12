@@ -1,26 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Box } from 'grommet';
+
+import Header from './components/Header';
+import Editor from './components/Editor';
+import Preview from './components/Preview';
+import History from './components/History';
 
 class App extends Component {
+  state = {
+    text: ''
+  }
+
+  handleEditorTextChange = editedText => {
+    this.setState({ text: editedText })
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Box>
+        <Header />
+        <Box direction='row' fill='vertical'>
+          <Editor
+            text={this.state.text}
+            onChangeText={this.handleEditorTextChange}
+          />
+          <Preview rawText={this.state.text} />
+          <History />
+        </Box>
+      </Box>
     );
   }
 }
