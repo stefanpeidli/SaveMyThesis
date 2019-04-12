@@ -49,11 +49,7 @@ class App extends Component {
         <Header />
         <Box direction='row' fill='vertical'>
           {this.state.activeVersion ? (
-            <DiffPreview
-              oldText={'I am the previous text!'}
-              newText={'I am the new text!'}
-              versionId={this.state.activeVersion}
-            />
+            <DiffPreview versionId={this.state.activeVersion} />
           ) : (
             <React.Fragment>
               <Editor

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Heading, Paragraph, Meter } from 'grommet';
+import { Box, Heading, Paragraph } from 'grommet';
 import ReactDiffViewer from 'react-diff-viewer';
 import ReactLoading from 'react-loading';
 
