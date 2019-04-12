@@ -2,6 +2,7 @@ import numpy as np
 import re
 import requests
 import pprint
+import nltk
 from flair.data import Sentence
 from flair.embeddings import WordEmbeddings, DocumentPoolEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
@@ -52,6 +53,23 @@ def keyphrase_extraction(text: str) -> list:
     return key_phrases['documents'][0]['keyPhrases']
 
 
+def count_changes(difference):
+    # Takes difference from wdiffhtml as input
+    # Returns total number of changes in words
+    dif = difference.splitlines()
+    num_changes = 0
+    for line in dif:
+        if '<ins>' in line:
+            word_list = nltk.word_tokenize(
+                line[re.search('<ins>', line).end():re.search('</ins>', line).start()])
+            num_changes += len(word_list)
+        if '<del>' in line:
+            word_list = nltk.word_tokenize(
+                line[re.search('<del>', line).end():re.search('</del>', line).start()])
+            num_changes += len(word_list)
+    return num_changes
+
+
 if __name__ == "__main__":
     with open('text1.txt', 'r') as f:
         text1_ = f.read()
@@ -63,5 +81,3 @@ if __name__ == "__main__":
         example_md = f.read()
     print(which_paragraph_changed(example_md))
     print(keyphrase_extraction("I really hate Azure because it is a bad documented service."))
-
-
