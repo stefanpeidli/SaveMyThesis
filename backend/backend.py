@@ -8,16 +8,16 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 
 def is_difference_large(text1: str, text2: str) -> bool:
-    text1_preproccessed = Sentence(text1)
-    text2_preproccessed = Sentence(text2)
+    text1_preprocessed = Sentence(text1)
+    text2_preprocessed = Sentence(text2)
 
     glove_embedding = WordEmbeddings('glove')
     document_embedding = DocumentPoolEmbeddings([glove_embedding])
-    document_embedding.embed(text1_preproccessed)
-    document_embedding.embed(text2_preproccessed)
+    document_embedding.embed(text1_preprocessed)
+    document_embedding.embed(text2_preprocessed)
 
-    text1_embedding = text1_preproccessed.get_embedding()
-    text2_embedding = text2_preproccessed.get_embedding()
+    text1_embedding = text1_preprocessed.get_embedding()
+    text2_embedding = text2_preprocessed.get_embedding()
     text1_embedding = np.reshape(text1_embedding, (-1, 1))
     text2_embedding = np.reshape(text2_embedding, (-1, 1))
     similarity = cosine_similarity(text1_embedding, text2_embedding)
