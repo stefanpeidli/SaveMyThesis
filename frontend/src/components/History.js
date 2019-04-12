@@ -14,6 +14,7 @@ const History = ({ history, onClickItem }) => {
         fill='vertical'
         pad='medium'
         elevation='medium'
+        overflow={{ vertical: 'scroll' }}
       >
         <Text color='brand' weight='bold'>
           History

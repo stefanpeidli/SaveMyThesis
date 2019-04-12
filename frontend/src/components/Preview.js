@@ -12,7 +12,7 @@ const Preview = ({ rawText }) => {
         border='all'
         fill='vertical'
         pad='medium'
-        overflow='scroll'
+        overflow={{ vertical: 'scroll' }}
       >
         <Markdown>
           {rawText}
