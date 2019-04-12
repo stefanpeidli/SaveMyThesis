@@ -1,7 +1,6 @@
 import numpy as np
 import re
 import requests
-import pprint
 import nltk
 from flair.data import Sentence
 from flair.embeddings import WordEmbeddings, DocumentPoolEmbeddings
