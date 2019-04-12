@@ -1,6 +1,6 @@
 from flask import Flask, abort, request, Response
 from flask_cors import CORS
-from datetime import datetime
+import time
 import json
 import pymongo
 
@@ -24,14 +24,14 @@ def hello():
     return "Hello World!"
 
 @app.route("/history")
-def fetchHistory():
+def getHistory():
     history = db.get_history(version_collection)
     response = data_to_response(history)
     response.status_code = 200
     return response
 
 @app.route("/version/<version_id>")
-def fetchVersion(version_id):
+def getVersionById(version_id):
     version = db.get_version_by_id(version_collection, version_id)
     if version is None:
         response = data_to_response({})
@@ -46,10 +46,12 @@ def postVersion():
         abort(400)
     request_json = request.get_json()
     version_dict = {
-        "_id": datetime.now().strftime("%s"),
-        "timestamp": datetime.now().strftime("%s"),
+        "_id": int(time.time() * 1000),
+        "timestamp": int(time.time() * 1000),
         "text": request_json["text"],
-        "author": request_json["author"]
+        "author": request_json["author"],
+        "commitTitle": "Change something",
+        "commitText": "Bla bla bla bla bla bla bla bla bla bla bla."
     }
     db.insert_version(version_collection, version_dict)
     response = data_to_response(version_dict)
