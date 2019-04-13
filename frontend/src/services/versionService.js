@@ -3,7 +3,7 @@ import axios from 'axios'
 import { secToMs } from '../utils/timestamp'
 
 const versionInstance = axios.create({
-  baseURL: 'http://602950e4.ngrok.io',
+  baseURL: 'https://602950e4.ngrok.io',
   timeout: 1000,
 });
 
