@@ -15,7 +15,8 @@ CORS(app)
 
 def data_to_response(response_data):
     json_response = json.dumps(response_data)
-    response = Response(json_response, content_type = "application/json; charset=utf-8")
+    response = Response(json_response,
+                        content_type = "application/json; charset=utf-8")
     response.headers.add("content-length", len(json_response))
     return response
 
@@ -24,15 +25,15 @@ def hello():
     return "Hello World!"
 
 @app.route("/history")
-def getHistory():
+def get_history():
     history = db.get_history(version_collection)
     response = data_to_response(history)
     response.status_code = 200
     return response
 
 @app.route("/version/<version_id>")
-def getVersionById(version_id):
-    version = db.get_version_by_id(version_collection, version_id)
+def get_version_by_id(version_id):
+    version = db.get_version_by_id(version_collection, int(version_id))
     if version is None:
         response = data_to_response({})
         return response
@@ -41,17 +42,17 @@ def getVersionById(version_id):
     return response
 
 @app.route("/version", methods=["POST"])
-def postVersion():
+def post_version():
     if not request.json:
         abort(400)
     request_json = request.get_json()
     version_dict = {
-        "_id": int(time.time() * 1000),
-        "timestamp": int(time.time() * 1000),
+        "_id": int(time.time()),
+        "timestamp": int(time.time()),
         "text": request_json["text"],
         "author": request_json["author"],
         "commitTitle": "Change something",
-        "commitText": "Bla bla bla bla bla bla bla bla bla bla bla."
+        "commitText": "Bla bla bla bla bla bla bla bla bla bla bla.",
     }
     db.insert_version(version_collection, version_dict)
     response = data_to_response(version_dict)
