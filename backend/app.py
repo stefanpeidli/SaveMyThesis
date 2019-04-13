@@ -80,8 +80,9 @@ def post_version():
         },
     ]
     global counter
-    db.insert_version(version_collection, versions[counter % len(versions)])
-    response = data_to_response(versions[counter])
+    index = counter % len(versions)
+    db.insert_version(version_collection, versions[index])
+    response = data_to_response(versions[index])
     response.status_code = 200
     counter += 1
     return response
