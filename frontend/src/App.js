@@ -57,7 +57,7 @@ class App extends Component {
       <Box>
         <KeyHandler
           keyEventName={KEYDOWN}
-          keyValue='Control'
+          keyValue='Tab'
           onKeyHandle={this.postVersion}
         />
         <Header />
