@@ -1,3 +1,7 @@
+import http.client
+import urllib.parse
+import json
+import time
 import numpy as np
 import re
 import requests
@@ -162,4 +166,10 @@ if __name__ == "__main__":
     with open('example.md', 'r') as f:
         example_md = f.read()
     print(which_paragraph_changed(example_md))
-    print(keyphrase_extraction("I really hate Azure because it is a bad documented service."))
+    # print(keyphrase_extraction("I really hate Azure because it is a bad documented service."))
+#     print(keyphrase_extraction('''The First Picture Of A Black Hole
+# Katie Bouman led development of a computer program that made the breakthrough image possible.
+# The remarkable photo, showing a halo of dust and gas 500 million trillion km from Earth, was released on Wednesday. For Dr Bouman, its creation was the realization of an endeavor previously thought impossible.'''))
+    print(keyphrase_extraction('''Katie Bouman led development of a computer program that made the breakthrough image possible.
+The remarkable photo, showing a halo of dust and gas 500 million trillion km from Earth, was released on Wednesday.'''))
+    print(keyphrase_extraction('''Kip Thorne  made some cool but wrong visual effects.'''))

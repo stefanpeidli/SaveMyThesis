@@ -1,3 +1,4 @@
+import pymongo
 
 def insert_version(collection, version):
     inserted_doc = collection.insert_one(version)
@@ -9,7 +10,7 @@ def get_version_by_id(collection, version_id):
 
 def get_history(collection):
     docs = []
-    for doc in collection.find():
+    for doc in collection.find().sort("timestamp", pymongo.DESCENDING):
         doc["_id"] = str(doc["_id"])
         docs.append(doc)
     return docs
