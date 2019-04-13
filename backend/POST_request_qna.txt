@@ -1,0 +1,1 @@
+curl -X POST https://qnasavemythesis.azurewebsites.net/qnamaker/knowledgebases/c8e66538-a691-4acf-a95b-a496225913a9/generateAnswer -H "Authorization: EndpointKey 136f384e-616d-4c02-b248-2a1b73ea0442" -H "Content-type: application/json" -d "{'question':'When did I start writing about Katie Bouman?'}"
