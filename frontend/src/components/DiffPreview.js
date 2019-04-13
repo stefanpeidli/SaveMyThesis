@@ -64,10 +64,11 @@ const DiffPreview = ({ versionId, previousVersionId }) => {
               {` - ${new Date(activeVersion.timestamp).toDateString()} by ${activeVersion.author}`}
             </Text>
           </Heading>
-          <Paragraph>{activeVersion.commitText}</Paragraph>
+          <Text>{activeVersion.commitText}</Text>
+          <Paragraph />
           <ReactDiffViewer
-            oldValue={activeVersion.text}
-            newValue={previousVersion.text}
+            oldValue={previousVersion.text}
+            newValue={activeVersion.text}
           />
         </Box>
       )}

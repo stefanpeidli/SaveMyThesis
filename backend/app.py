@@ -41,22 +41,44 @@ def get_version_by_id(version_id):
     response.status_code = 200
     return response
 
+counter = 0
+
 @app.route("/version", methods=["POST"])
 def post_version():
     if not request.json:
         abort(400)
     request_json = request.get_json()
-    version_dict = {
-        "_id": int(time.time()),
-        "timestamp": int(time.time()),
-        "text": request_json["text"],
-        "author": request_json["author"],
-        "commitTitle": "Change something",
-        "commitText": "Bla bla bla bla bla bla bla bla bla bla bla.",
-    }
-    db.insert_version(version_collection, version_dict)
-    response = data_to_response(version_dict)
+    versions = [
+        {
+            "_id": int(time.time()),
+            "timestamp": int(time.time()),
+            "text": request_json["text"],
+            "author": request_json["author"],
+            "commitTitle": "Correct spelling",
+            "commitText": "Correct spellings of 5 words.",
+        },
+        {
+            "_id": int(time.time()),
+            "timestamp": int(time.time()),
+            "text": request_json["text"],
+            "author": request_json["author"],
+            "commitTitle": "Add section",
+            "commitText": "Section about 'computer program', 'breakthrough image possible', 'Katie Bouman'",
+        },
+        {
+            "_id": int(time.time()),
+            "timestamp": int(time.time()),
+            "text": request_json["text"],
+            "author": request_json["author"],
+            "commitTitle": "Change section",
+            "commitText": "Change content to be about 'wrong visual effects', 'Kip Thorne'",
+        },
+    ]
+    global counter
+    db.insert_version(version_collection, versions[counter])
+    response = data_to_response(versions[counter])
     response.status_code = 200
+    counter += 1
     return response
 
 if __name__ == "__main__":
