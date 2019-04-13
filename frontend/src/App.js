@@ -7,13 +7,13 @@ import Preview from './components/Preview';
 import DiffPreview from './components/DiffPreview';
 import History from './components/History';
 
-import { fetchHistory } from './services/historyService';
-import { postVersion } from './services/versionService';
+import { postVersion, fetchHistory } from './services/versionService';
 
 class App extends Component {
   state = {
     text: '',
-    activeVersion: null,
+    activeVersionId: null,
+    previousVersionId: null,
     history: []
   }
 
@@ -26,8 +26,21 @@ class App extends Component {
     this.setState({ text: editedText })
   }
 
-  handleClickHistoryItem = id => {
-    this.setState({ activeVersion: id })
+  handleClickHistoryItem = clickedId => {
+    const clickedVersionIndex = this.state.history.findIndex(
+      ({ _id }) => _id === clickedId
+    )
+    if (clickedVersionIndex === this.state.history.length - 1) {
+      this.setState({
+        activeVersionId: clickedId,
+        previousVersionId: clickedId
+      })
+    } else {
+      this.setState({
+        activeVersionId: clickedId,
+        previousVersionId: this.state.history[clickedVersionIndex + 1]._id
+      })
+    }
   }
 
   postVersion = async () => {
@@ -47,8 +60,11 @@ class App extends Component {
         <Box>
           <Header />
           <Box direction='row' fill='vertical'>
-            {this.state.activeVersion ? (
-              <DiffPreview versionId={this.state.activeVersion} />
+            {this.state.activeVersionId ? (
+              <DiffPreview
+                versionId={this.state.activeVersionId}
+                previousVersionId={this.state.previousVersionId}
+              />
             ) : (
               <React.Fragment>
                 <Editor

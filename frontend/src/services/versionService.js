@@ -1,14 +1,27 @@
 import axios from 'axios'
 
+import { secToMs } from '../utils/timestamp'
+
 const versionInstance = axios.create({
   baseURL: 'http://localhost:5000',
   timeout: 1000,
 });
 
+export const fetchHistory = async () => {
+  try {
+    const response = await versionInstance.get('/history')
+    const history = response.data.map(item => secToMs(item))
+    return history
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export const postVersion = async (text, author) => {
   try {
     const response = await versionInstance.post('/version', { text, author })
-    return response.data
+    const postedVersion = secToMs(response.data)
+    return postedVersion
   } catch (error) {
     console.error(error)
   }
@@ -17,7 +30,8 @@ export const postVersion = async (text, author) => {
 export const fetchVersion = async (versionId) => {
   try {
     const response = await versionInstance.get(`/version/${versionId}`)
-    return response.data
+    const fetchedVersion = secToMs(response.data)
+    return fetchedVersion
   } catch (error) {
     console.error(error)
   }
