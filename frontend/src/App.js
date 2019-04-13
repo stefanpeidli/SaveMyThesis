@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Box, Keyboard } from 'grommet';
+import { Box } from 'grommet';
+import KeyHandler, { KEYDOWN } from 'react-key-handler';
 
 import Header from './components/Header';
 import Editor from './components/Editor';
@@ -53,34 +54,34 @@ class App extends Component {
 
   render() {
     return (
-      <Keyboard
-        onTab={this.postVersion}
-        target='document'
-      >
-        <Box>
-          <Header />
-          <Box direction='row' fill='vertical'>
-            {this.state.activeVersionId ? (
-              <DiffPreview
-                versionId={this.state.activeVersionId}
-                previousVersionId={this.state.previousVersionId}
+      <Box>
+        <KeyHandler
+          keyEventName={KEYDOWN}
+          keyValue='Control'
+          onKeyHandle={this.postVersion}
+        />
+        <Header />
+        <Box direction='row' fill='vertical'>
+          {this.state.activeVersionId ? (
+            <DiffPreview
+              versionId={this.state.activeVersionId}
+              previousVersionId={this.state.previousVersionId}
+            />
+          ) : (
+            <React.Fragment>
+              <Editor
+                text={this.state.text}
+                onChangeText={this.handleEditorTextChange}
               />
-            ) : (
-              <React.Fragment>
-                <Editor
-                  text={this.state.text}
-                  onChangeText={this.handleEditorTextChange}
-                />
-                <Preview rawText={this.state.text} />
-              </React.Fragment>
-            )}
-            <History
-              history={this.state.history}
-              onClickItem={this.handleClickHistoryItem}
-              />
-          </Box>
+              <Preview rawText={this.state.text} />
+            </React.Fragment>
+          )}
+          <History
+            history={this.state.history}
+            onClickItem={this.handleClickHistoryItem}
+            />
         </Box>
-      </Keyboard>
+      </Box>
     );
   }
 }

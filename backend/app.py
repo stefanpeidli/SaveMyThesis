@@ -1,5 +1,5 @@
 from flask import Flask, abort, request, Response
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import time
 import json
 import pymongo
@@ -12,6 +12,7 @@ version_collection = save_my_thesis_db["versions"]
 
 app = Flask(__name__)
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 def data_to_response(response_data):
     json_response = json.dumps(response_data)
@@ -21,10 +22,12 @@ def data_to_response(response_data):
     return response
 
 @app.route("/")
+@cross_origin()
 def hello():
     return "Hello World!"
 
 @app.route("/history")
+@cross_origin()
 def get_history():
     history = db.get_history(version_collection)
     response = data_to_response(history)
@@ -32,6 +35,7 @@ def get_history():
     return response
 
 @app.route("/version/<version_id>")
+@cross_origin()
 def get_version_by_id(version_id):
     version = db.get_version_by_id(version_collection, int(version_id))
     if version is None:
@@ -44,6 +48,7 @@ def get_version_by_id(version_id):
 counter = 0
 
 @app.route("/version", methods=["POST"])
+@cross_origin()
 def post_version():
     if not request.json:
         abort(400)
@@ -75,11 +80,12 @@ def post_version():
         },
     ]
     global counter
-    db.insert_version(version_collection, versions[counter])
-    response = data_to_response(versions[counter])
+    index = counter % len(versions)
+    db.insert_version(version_collection, versions[index])
+    response = data_to_response(versions[index])
     response.status_code = 200
     counter += 1
     return response
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
