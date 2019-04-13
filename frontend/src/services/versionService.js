@@ -3,7 +3,7 @@ import axios from 'axios'
 import { secToMs } from '../utils/timestamp'
 
 const versionInstance = axios.create({
-  baseURL: 'http://savemythesis.westeurope.cloudapp.azure.com:5000',
+  baseURL: 'https://savemythesis.westeurope.cloudapp.azure.com:5000',
   timeout: 1000,
 });
 
