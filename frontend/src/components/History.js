@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Text } from 'grommet';
 
 import HistoryItem from './HistoryItem';
+import AzureChatBot from './AzureChatBot';
 
 const History = ({ history, onClickItem }) => {
   return (
@@ -37,6 +38,7 @@ const History = ({ history, onClickItem }) => {
           ))}
         </Box>
       </Box>
+      <AzureChatBot />
     </Box>
   );
 }
