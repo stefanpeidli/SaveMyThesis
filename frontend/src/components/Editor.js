@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, TextArea } from 'grommet';
 
-const Editor = ({ text, onChangeText }) => {
+const Editor = ({ text, onChangeText, onKeyDown }) => {
   return (
     <Box
       pad='medium'
@@ -12,7 +12,10 @@ const Editor = ({ text, onChangeText }) => {
         placeholder='Start writing your text here!'
         fill
         value={text}
-        onChange={event => onChangeText(event.target.value)}
+        onChange={event => {
+          onChangeText(event.target.value)
+          event.target.onkeydown = e => onKeyDown(e)
+        }}
       />
     </Box>
   );

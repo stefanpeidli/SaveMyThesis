@@ -52,6 +52,12 @@ class App extends Component {
     }, 2000)
   }
 
+  handleKeyDown = (event) => {
+    if (event.key === 'Control') {
+      this.postVersion()
+    }
+  }
+
   render() {
     return (
       <Box>
@@ -72,6 +78,7 @@ class App extends Component {
               <Editor
                 text={this.state.text}
                 onChangeText={this.handleEditorTextChange}
+                onKeyDown={this.handleKeyDown}
               />
               <Preview rawText={this.state.text} />
             </React.Fragment>
