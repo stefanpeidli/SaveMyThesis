@@ -52,10 +52,10 @@ def keyphrase_extraction(text: str) -> list:
     return key_phrases['documents'][0]['keyPhrases']
 
 
-def count_changes(difference):
-    # Takes difference from wdiffhtml as input
-    # Returns total number of changes in words
-    dif = difference.splitlines()
+def count_changes(text: str) -> int:
+    # Input str: text difference from wdiff as input
+    # Output int: total number of changes in words
+    dif = text.splitlines()
     num_changes = 0
     for line in dif:
         if '<ins>' in line:
@@ -67,6 +67,89 @@ def count_changes(difference):
                 line[re.search('<del>', line).end():re.search('</del>', line).start()])
             num_changes += len(word_list)
     return num_changes
+
+
+# WIP
+def type_of_change(list_of_diffs: list):
+    # Input list: List of strings, consisting of consecutive text diffs from wdiff
+    # Output list: List of int, corresponding commit type for the diffs
+    # 0 : do not commit
+    # 1 : Add §
+    # 2 : Small changes
+    # 3 : Edit § #TODO also output which was edited, how?
+    
+    out = []
+    # at least this many word changes have to be added/deleted in a paragraph to qualify for a paragraph commit
+    paragraph_treshold = 7
+    # POSTs without changes are discarded (assumption) so I assume every POST here has actual changes
+    scope_hist = []  # record scopes aka edited paragraphs of a POST
+    count_hist = []  # record count of words added/deleted by a POST
+    post_id_hist = []
+    paragraph_added_hist = []
+    posts_waiting = False  # are posts queued for a commit?
+    scope_switched = False  # did the scope switch since the last POST?
+    num_of_paragraphs = 0
+    for k, difference in enumerate(list_of_diffs):
+        # Check scopes
+        changes = which_paragraph_changed(difference)
+        scope = np.arange(len(changes))[changes] if changes is not None else []
+        # scope_hist.append(scope)
+        scope_hist.append(tuple(scope))
+        post_id_hist.append(k)
+        # only POSTs that change a single Scope can be "§ edit" commits
+        single_scope = len(scope == 1)
+        if len(scope_hist) > 1:
+            scope_switched = (scope == scope_hist[-1])
+            posts_waiting = True
+        else:
+            scope_switched = False
+
+        count_hist.append(count_changes(difference))
+
+        # Check if § was added
+        paragraph_added = (
+            len(changes) - num_of_paragraphs) > 0 if k != 0 else False
+        num_of_paragraphs = len(changes)
+        paragraph_added_hist.append(paragraph_added)
+
+        # Do commit
+        # TODO COMMIT and delete corresponding histories
+        # find out which POSTs to commit
+        if single_scope:
+            current_scope = scope
+            words_changed = 0
+            for i in reversed(range(len(scope_hist))):
+                # scope_hist[i] != current_scope:
+                if all(scope_hist[i] != current_scope):
+                    break
+                else:
+                    words_changed += count_hist[i]
+            print('POST ', k, ' added ', words_changed, ' words in §', scope[0])
+
+        # Check if we qualified for a commit, then commit waiting POSTs (if there are POSTs waiting for commit)
+        # then we made enough changes to qualify for a paragraph commit
+        if posts_waiting and (words_changed >= paragraph_treshold):
+            print('You should commit POST ', post_id_hist[i], ' as: ', end='')
+            if any(paragraph_added_hist[:i+1]):
+                out.append(1)
+                print('Add a §')
+            elif len(list(set(scope_hist[:i+1]))) > 1:
+                out.append(2)
+                print(scope_hist[:i+1], len(np.unique(scope_hist[:i+1])))
+                print('small changes')
+            else:
+                out.append(3)
+                print('Edit of § ', scope_hist[0][0])
+            posts_waiting = False  # We commited all waiting POSTs in the queue
+
+            # Clear POST history
+            del(post_id_hist[:i+1])
+            del(scope_hist[:i+1])
+            del(count_hist[:i+1])
+            del(paragraph_added_hist[:i+1])
+        else:
+            out.append(0)
+    return out
 
 
 if __name__ == "__main__":
